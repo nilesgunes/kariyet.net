@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if lang == 'en' %}Login with Google{% else %}Google ile Giriş Yap{% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="google-login-container">
+        <h2>{% if lang == 'en' %}Login via Google{% else %}Google ile Giriş Yap{% endif %}</h2>
+        
+        <form method="POST" action="/login/google">
+            <div class="form-group">
+                <label for="email">
+                    {% if lang == 'en' %}Enter Your Email:{% else %}E-posta Adresinizi Girin:{% endif %}
+                </label>
+                <input type="email" name="email" id="email" required>
+            </div>
+
+            <button type="submit" class="button-google">
+                {% if lang == 'en' %}Login{% else %}Giriş Yap{% endif %}
+            </button>
+        </form>
+
+        <div class="login-prompt">
+            <a href="/login">
+                {% if lang == 'en' %}Back to Regular Login{% else %}Normal Giriş'e Dön{% endif %}
+            </a>
+        </div>
+    </div>
+{% endblock %}

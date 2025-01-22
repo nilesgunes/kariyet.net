@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if lang == 'en' %}Job Details{% else %}İş Detayları{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="job-page-container">
+    <div class="job-details">
+        <div class="primary-job">
+            <img src="{{ job['full_image_path'] or '/static/images/default.png' }}" 
+                 alt="{% if lang == 'en' %}{{ job['position_en'] }}{% else %}{{ job['position_tr'] }}{% endif %}">
+            
+            <h2>{% if lang == 'en' %}{{ job['position_en'] }}{% else %}{{ job['position_tr'] }}{% endif %}</h2>
+            
+            <div class="job-info">
+                <p><strong>{% if lang == 'en' %}Company:{% else %}Şirket:{% endif %}</strong> {{ job['company_name'] }}</p>
+                <p><strong>{% if lang == 'en' %}Location:{% else %}Konum:{% endif %}</strong> {{ job['country'] }}, {{ job['city'] }}, {{ job['town'] }}</p>
+                <p><strong>{% if lang == 'en' %}Price Range:{% else %}Fiyat Aralığı:{% endif %}</strong> {{ job['price_range'] }}</p>
+                <p><strong>{% if lang == 'en' %}Total Applications:{% else %}Toplam Başvuru:{% endif %}</strong> {{ job['applications_count'] }}</p>
+                <p><strong>{% if lang == 'en' %}Description:{% else %}Açıklama:{% endif %}</strong><br>
+                {% if lang == 'en' %}{{ job['description_en'] }}{% else %}{{ job['description_tr'] }}{% endif %}</p>
+            </div>
+
+            <div class="application-section">
+                {% if user %}
+                    {% if has_applied %}
+                        <p class="already-applied">
+                            {% if lang == 'en' %}You have already applied for this position{% else %}Bu pozisyon için zaten başvurdunuz{% endif %}
+                        </p>
+                    {% else %}
+                        <form action="/apply/{{ job['job_id'] }}" method="POST">
+                            <button type="submit" class="apply-button">
+                                {% if lang == 'en' %}Apply{% else %}Başvur{% endif %}
+                            </button>
+                        </form>
+                    {% endif %}
+                {% else %}
+                    <p class="login-prompt">
+                        {% if lang == 'en' %}
+                            Please <a href="/login">login</a> or <a href="/register">register</a> to apply for this job.
+                        {% else %}
+                            Bu işe başvurmak için lütfen <a href="/login">giriş yapın</a> veya <a href="/register">kayıt olun</a>.
+                        {% endif %}
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="similar-jobs">
+        <h3>{% if lang == 'en' %}Similar Jobs{% else %}Benzer İşler{% endif %}</h3>
+        <div class="similar-jobs-grid">
+            {% for similar_job in similar_jobs %}
+                <div class="similar-job-card">
+                    <img src="{{ similar_job.full_image_path }}" 
+                         alt="{% if lang == 'en' %}{{ similar_job.position_en }}{% else %}{{ similar_job.position_tr }}{% endif %}">
+                    <h4>{{ similar_job.position_en if lang == 'en' else similar_job.position_tr }}</h4>
+                    <p class="company">{{ similar_job.company_name }}</p>
+                    <p class="location">{{ similar_job.city }}, {{ similar_job.town }}</p>
+                    <p class="applications">
+                        {% if lang == 'en' %}Applications:{% else %}Başvurular:{% endif %}
+                        {{ similar_job.applications_count }}
+                    </p>
+                    <a href="/job/{{ similar_job.job_id }}" class="view-details-btn">
+                        {% if lang == 'en' %}View Details{% else %}Detayları Gör{% endif %}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

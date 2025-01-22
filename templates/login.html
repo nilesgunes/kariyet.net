@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if lang == 'en' %}Login{% else %}Giriş Yap{% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="login-container">
+        <h2>{% if lang == 'en' %}Login{% else %}Giriş Yap{% endif %}</h2>
+        
+        <form method="POST" action="/login">
+            <div class="form-group">
+                <label for="email">{% if lang == 'en' %}Email:{% else %}E-posta:{% endif %}</label>
+                <input type="email" name="email" id="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">{% if lang == 'en' %}Password:{% else %}Şifre:{% endif %}</label>
+                <input type="password" name="password" id="password" required>
+            </div>
+
+            <button type="submit" class="button-primary">
+                {% if lang == 'en' %}Login{% else %}Giriş Yap{% endif %}
+            </button>
+        </form>
+
+        <div class="alternative-login">
+            <h3>{% if lang == 'en' %}Or Login with Google{% else %}veya Google ile Giriş Yap{% endif %}</h3>
+            <button onclick="location.href='/login/google'" class="button-google">
+                {% if lang == 'en' %}Login with Google{% else %}Google ile Giriş Yap{% endif %}
+            </button>
+        </div>
+
+        <div class="register-prompt">
+            <a href="/register">
+                {% if lang == 'en' %}Don't have an account? Register{% else %}Hesabınız yok mu? Kayıt Olun{% endif %}
+            </a>
+        </div>
+    </div>
+{% endblock %}

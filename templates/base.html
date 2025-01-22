@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="{% if lang == 'en' %}en{% else %}tr{% endif %}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Kariyer.net{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Kariyer.net</h1>
+            <nav>
+                <ul>
+                    <li>
+                        <select onchange="switchLanguage(this.value)">
+                            <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
+                            <option value="tr" {% if lang == 'tr' %}selected{% endif %}>Türkçe</option>
+                        </select>
+                    </li>
+                    {% if user %}
+                        <li>
+                            <div class="profile-picture-container">
+                                <img src="{{ user['profile_pic'] }}" 
+                                     alt="Profile Picture" 
+                                     class="profile-picture"
+                                     onerror="this.src='/static/uploads/default.png'">
+                            </div>
+                            {% if lang == 'en' %}Welcome, {% else %}Hoşgeldiniz, {% endif %}{{ user['name'] }}
+                        </li>
+                        <li><a href="{{ url_for('logout') }}">{% if lang == 'en' %}Logout{% else %}Çıkış Yap{% endif %}</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('login') }}">{% if lang == 'en' %}Login{% else %}Giriş Yap{% endif %}</a></li>
+                        <li><a href="{{ url_for('register') }}">{% if lang == 'en' %}Register{% else %}Kayıt Ol{% endif %}</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    {% block content %}{% endblock %}
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Kariyer.net. {% if lang == 'en' %}All rights reserved.{% else %}Tüm hakları saklıdır.{% endif %}</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchLanguage(lang) {
+            document.cookie = `lang=${lang}; path=/;`;
+            location.reload();
+        }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

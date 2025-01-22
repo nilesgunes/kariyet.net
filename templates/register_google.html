@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if lang == 'en' %}Register with Google{% else %}Google ile Kayıt Ol{% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="google-register-container">
+        <h2>{% if lang == 'en' %}Register via Google{% else %}Google ile Kayıt Ol{% endif %}</h2>
+        
+        <form method="POST" action="/register/google">
+            <div class="form-group">
+                <label for="email">
+                    {% if lang == 'en' %}Enter Your Email:{% else %}E-posta Adresinizi Girin:{% endif %}
+                </label>
+                <input type="email" name="email" id="email" required>
+            </div>
+
+            <button type="submit" class="button-google">
+                {% if lang == 'en' %}Register{% else %}Kayıt Ol{% endif %}
+            </button>
+        </form>
+
+        <div class="register-prompt">
+            <a href="/register">
+                {% if lang == 'en' %}Back to Regular Registration{% else %}Normal Kayıt'a Dön{% endif %}
+            </a>
+        </div>
+    </div>
+{% endblock %}

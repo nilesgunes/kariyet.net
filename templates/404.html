@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="{% if lang == 'en' %}en{% else %}tr{% endif %}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if lang == 'en' %}Page Not Found{% else %}Sayfa Bulunamadı{% endif %}</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script>
+        function switchLanguage(lang) {
+            document.cookie = `lang=${lang}; path=/;`;
+            location.reload();
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>{% if lang == 'en' %}Page Not Found{% else %}Sayfa Bulunamadı{% endif %}</h1>
+            <nav>
+                <ul>
+                    <li>
+                        <select onchange="switchLanguage(this.value)">
+                            <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
+                            <option value="tr" {% if lang == 'tr' %}selected{% endif %}>Türkçe</option>
+                        </select>
+                    </li>
+                    <li><a href="/">{% if lang == 'en' %}Home{% else %}Anasayfa{% endif %}</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h2>{% if lang == 'en' %}Oops! We couldn't find what you're looking for.{% else %}Üzgünüz! Aradığınız sayfayı bulamadık.{% endif %}</h2>
+            <p>{% if lang == 'en' %}The page you requested does not exist or may have been removed.{% else %}İstediğiniz sayfa mevcut değil veya silinmiş olabilir.{% endif %}</p>
+            <a href="/" class="button">{% if lang == 'en' %}Go Back to Home{% else %}Anasayfaya Dön{% endif %}</a>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 {% if lang == 'en' %}Job Search{% else %}İş Arama{% endif %}. {% if lang == 'en' %}All rights reserved.{% else %}Tüm hakları saklıdır.{% endif %}</p>
+        </div>
+    </footer>
+</body>
+</html>

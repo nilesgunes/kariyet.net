@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if lang == 'en' %}Search Results{% else %}Arama Sonuçları{% endif %}
+{% endblock %}
+
+{% block head %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<section class="filters">
+    <div class="container">
+        <h2>{% if lang == 'en' %}Filters{% else %}Filtreler{% endif %}</h2>
+
+        <form method="GET" action="/search">
+            <!-- Retain the job parameter -->
+            <input type="hidden" name="job" value="{{ request.args.get('job', '') }}">
+
+            <!-- Country Filter -->
+            <div class="form-group">
+                <label for="country">{% if lang == 'en' %}Country{% else %}Ülke{% endif %}:</label>
+                <input type="text" 
+                       id="country" 
+                       name="country" 
+                       value="{{ request.args.get('country', '') }}"
+                       placeholder="{% if lang == 'en' %}Enter Country{% else %}Ülke Girin{% endif %}">
+            </div>
+
+            <!-- City Filter -->
+            <div class="form-group">
+                <label for="city">{% if lang == 'en' %}City{% else %}Şehir{% endif %}:</label>
+                <input type="text" 
+                       id="city" 
+                       name="city" 
+                       value="{{ request.args.get('city', '') }}"
+                       placeholder="{% if lang == 'en' %}Enter City{% else %}Şehir Girin{% endif %}">
+            </div>
+
+            <!-- Town Filter -->
+            <div class="form-group">
+                <label for="town">{% if lang == 'en' %}Town{% else %}İlçe{% endif %}:</label>
+                <input type="text" 
+                       id="town" 
+                       name="town" 
+                       value="{{ request.args.get('town', '') }}"
+                       placeholder="{% if lang == 'en' %}Enter Town{% else %}İlçe Girin{% endif %}">
+            </div>
+
+            <!-- Working Preference -->
+            <div class="form-group">
+                <label for="preference">{% if lang == 'en' %}Working Preference{% else %}Çalışma Tercihi{% endif %}:</label>
+                <select id="preference" name="preference">
+                    <option value="">{% if lang == 'en' %}All{% else %}Tümü{% endif %}</option>
+                    <option value="onsite" {% if request.args.get('preference') == 'onsite' %}selected{% endif %}>
+                        {% if lang == 'en' %}Onsite{% else %}İş Yerinde{% endif %}
+                    </option>
+                    <option value="remote" {% if request.args.get('preference') == 'remote' %}selected{% endif %}>
+                        {% if lang == 'en' %}Remote{% else %}Uzaktan{% endif %}
+                    </option>
+                    <option value="hybrid" {% if request.args.get('preference') == 'hybrid' %}selected{% endif %}>
+                        {% if lang == 'en' %}Hybrid{% else %}Hibrit{% endif %}
+                    </option>
+                </select>
+            </div>
+
+            <button type="submit" class="button-primary">
+                {% if lang == 'en' %}Apply Filters{% else %}Filtreleri Uygula{% endif %}
+            </button>
+        </form>
+    </div>
+</section>
+
+
+<section class="search-results">
+    <div class="container">
+        <h2>{% if lang == 'en' %}Job Postings{% else %}İş İlanları{% endif %}</h2>
+
+        {% if jobs %}
+            <ul class="jobs-list">
+                {% for job in jobs %}
+                    <li class="job-card">
+                        <img src="{{ job['image_path'] }}" 
+                             alt="{% if lang == 'en' %}{{ job['position_en'] }}{% else %}{{ job['position_tr'] }}{% endif %}" 
+                             width="150" 
+                             height="150">
+                        
+                        <h3>
+                            <a href="/job/{{ job['job_id'] }}">
+                                {% if lang == 'en' %}{{ job['position_en'] }}{% else %}{{ job['position_tr'] }}{% endif %}
+                            </a>
+                        </h3>
+                        
+                        <p class="company-name">{{ job['company_name'] }}</p>
+                        
+                        <p class="location">
+                            {% if lang == 'en' %}Location:{% else %}Konum:{% endif %}
+                            {{ job['country'] }}, {{ job['city'] }}, {{ job['town'] }}
+                        </p>
+                        
+                        <p class="working-preference">
+                            {% if lang == 'en' %}Working Preference:{% else %}Çalışma Tercihi:{% endif %}
+                            {{ job.get('working_preference', 'N/A') }}
+                        </p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="no-results">
+                {% if lang == 'en' %}
+                    No jobs found matching your criteria.
+                {% else %}
+                    Kriterlerinize uygun iş bulunamadı.
+                {% endif %}
+            </p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        function removeFilter(filter) {
+            const url = new URL(window.location.href);
+            url.searchParams.delete(filter);
+            window.location.href = url.href;
+        }
+    </script>
+{% endblock %}

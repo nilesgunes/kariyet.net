@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if lang == 'en' %}Register{% else %}Kayıt Ol{% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="register-container">
+        <h2>{% if lang == 'en' %}Register{% else %}Kayıt Ol{% endif %}</h2>
+        
+        <form method="POST" action="/register" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name">{% if lang == 'en' %}Name:{% else %}Ad:{% endif %}</label>
+                <input type="text" name="name" id="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="surname">{% if lang == 'en' %}Surname:{% else %}Soyad:{% endif %}</label>
+                <input type="text" name="surname" id="surname" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">{% if lang == 'en' %}Email:{% else %}E-posta:{% endif %}</label>
+                <input type="email" name="email" id="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">{% if lang == 'en' %}Password:{% else %}Şifre:{% endif %}</label>
+                <input type="password" name="password" id="password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">
+                    {% if lang == 'en' %}Confirm Password:{% else %}Şifreyi Onaylayın:{% endif %}
+                </label>
+                <input type="password" name="confirm_password" id="confirm_password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="country">{% if lang == 'en' %}Country:{% else %}Ülke:{% endif %}</label>
+                <select name="country" id="country" onchange="updateCities()" required>
+                    <option value="Turkey">{% if lang == 'en' %}Turkey{% else %}Türkiye{% endif %}</option>
+                    <option value="USA">{% if lang == 'en' %}USA{% else %}ABD{% endif %}</option>
+                    <option value="Britain">{% if lang == 'en' %}Britain{% else %}Birleşik Krallık{% endif %}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="city">{% if lang == 'en' %}City:{% else %}Şehir:{% endif %}</label>
+                <select name="city" id="city" required>
+                    <!-- Cities will be populated by JavaScript -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="profile_picture">
+                    {% if lang == 'en' %}Profile Picture (Optional):{% else %}Profil Resmi (İsteğe Bağlı):{% endif %}
+                </label>
+                <input type="file" name="profile_picture" id="profile_picture" accept="image/*">
+            </div>
+
+            <button type="submit" class="button-primary">
+                {% if lang == 'en' %}Register{% else %}Kayıt Ol{% endif %}
+            </button>
+        </form>
+
+        <div class="google-register">
+            <h3>{% if lang == 'en' %}Or Register with Google{% else %}veya Google ile Kayıt Ol{% endif %}</h3>
+            <form method="POST" action="/register/google">
+                <div class="form-group">
+                    <label for="google_email">{% if lang == 'en' %}Google Email:{% else %}Google E-posta:{% endif %}</label>
+                    <input type="email" name="email" id="google_email" required>
+                </div>
+                <button type="submit" class="button-google">
+                    {% if lang == 'en' %}Register via Google{% else %}Google ile Kayıt Ol{% endif %}
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        function updateCities() {
+            const country = document.getElementById("country").value;
+            const city = document.getElementById("city");
+            city.innerHTML = "";
+
+            const citiesByCountry = {
+                Turkey: ["Istanbul", "Ankara", "Izmir"],
+                USA: ["New York", "Los Angeles", "Chicago"],
+                Britain: ["London", "Manchester", "Birmingham"]
+            };
+
+            if (citiesByCountry[country]) {
+                citiesByCountry[country].forEach(cityName => {
+                    const option = document.createElement("option");
+                    option.value = cityName;
+                    option.textContent = cityName;
+                    city.appendChild(option);
+                });
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", updateCities);
+    </script>
+{% endblock %}

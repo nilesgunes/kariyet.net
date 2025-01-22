@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if lang == 'en' %}Job Search - Home{% else %}İş Arama - Anasayfa{% endif %}
+{% endblock %}
+
+{% block head %}
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- jQuery UI -->
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+{% endblock %}
+
+{% block content %}
+    <section class="search-bar">
+        <div class="container">
+            <form id="search-form" method="GET" action="/search">
+                <!-- Search by Job Title -->
+                <input type="text" 
+                       id="job-search" 
+                       name="job" 
+                       placeholder="{% if lang == 'en' %}Search by Job Title{% else %}Pozisyona Göre Ara{% endif %}" 
+                       autocomplete="off" />
+    
+                <!-- Search by City -->
+                <input type="text" 
+                       id="city-search" 
+                       name="city" 
+                       placeholder="{% if lang == 'en' %}Search by City{% else %}Şehre Göre Ara{% endif %}" 
+                       autocomplete="off" />
+    
+                <button type="submit">{% if lang == 'en' %}Search{% else %}Ara{% endif %}</button>
+            </form>
+        </div>
+    </section>
+
+    <main>
+        <div class="container">
+            <h2>
+                {% if lang == 'en' %}
+                    Job Postings in {{ user_city }}
+                {% else %}
+                    {{ user_city }}'daki İş İlanları
+                {% endif %}
+            </h2>
+            <ul>
+                {% for job in jobs %}
+                <li>
+                    <img src="{{ job['image_path'] }}" 
+                         alt="{% if lang == 'en' %}{{ job['position_en'] }}{% else %}{{ job['position_tr'] }}{% endif %}" 
+                         width="150" 
+                         height="150">
+                    <h3>
+                        <a href="/job/{{ job['job_id'] }}">
+                            {% if lang == 'en' %}{{ job['position_en'] }}{% else %}{{ job['position_tr'] }}{% endif %}
+                        </a>
+                    </h3>
+                    <p>{{ job['company_name'] }}</p>
+                    <p>
+                        {% if lang == 'en' %}
+                            Country: {{ job['country'] }} | City: {{ job['city'] }}
+                        {% else %}
+                            Ülke: {{ job['country'] }} | Şehir: {{ job['city'] }}
+                        {% endif %}
+                    </p>
+                    <p>
+                        {% if lang == 'en' %}
+                            Price Range: {{ job['price_range'] }}
+                        {% else %}
+                            Fiyat Aralığı: {{ job['price_range'] }}
+                        {% endif %}
+                    </p>
+                    <p>
+                        {% if lang == 'en' %}
+                            {{ job['description_en'] }}
+                        {% else %}
+                            {{ job['description_tr'] }}
+                        {% endif %}
+                    </p>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </main>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(function () {
+            // Autocomplete for Job Search
+            $("#job-search").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/autocomplete",
+                        dataType: "json",
+                        data: {
+                            q: request.term,
+                            field: "position"
+                        },
+                        success: function (data) {
+                            response(data);
+                        },
+                        error: function () {
+                            console.error("Job autocomplete request failed.");
+                        }
+                    });
+                },
+                minLength: 2
+            });
+    
+            // Autocomplete for City Search
+            $("#city-search").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/autocomplete",
+                        dataType: "json",
+                        data: {
+                            q: request.term,
+                            field: "city"
+                        },
+                        success: function (data) {
+                            response(data);
+                        },
+                        error: function () {
+                            console.error("City autocomplete request failed.");
+                        }
+                    });
+                },
+                minLength: 2
+            });
+        });
+    </script>
+{% endblock %}
