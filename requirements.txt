@@ -3,14 +3,6 @@ gunicorn==20.1.0
 
 
 
-
-
-VIDEO LINK 
-https://www.youtube.com/watch?v=j4d8g1lYZDU
-
-
-
-
 Job Search Application
 
 Overview
