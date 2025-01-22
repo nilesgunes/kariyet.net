@@ -77,4 +77,4 @@ project-root/
 Contact
 For questions or suggestions, feel free to contact:
 Name: Selin Gunes
-Email: 19070001044@stu.ayasr.edu.tr
+Email: 19070001044@stu.yasar.edu.tr
